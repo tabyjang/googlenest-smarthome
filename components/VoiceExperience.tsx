@@ -1,26 +1,24 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from "@google/genai";
 
 const VoiceExperience: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
-  const [status, setStatus] = useState<string>("'오케이 구글'이라고 불러보세요.");
+  const [status, setStatus] = useState<string>("음성 버튼을 눌러 시작하세요");
   const [lastResponse, setLastResponse] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const simulateVoiceControl = async () => {
     if (isProcessing) return;
-    
+
     setIsListening(true);
     setStatus("듣고 있습니다...");
     setLastResponse("");
-    
-    // Simulate recording time
+
     setTimeout(async () => {
       setIsListening(false);
       setIsProcessing(true);
-      setStatus("분석 중...");
+      setStatus("응답 생성 중...");
 
       try {
         const apiKey = process.env.API_KEY;
@@ -38,83 +36,152 @@ const VoiceExperience: React.FC = () => {
         });
 
         setLastResponse(response.text || "네, 거실 조명을 켰습니다.");
-        setStatus("완료되었습니다.");
+        setStatus("완료");
       } catch (e) {
         console.error("AI Error:", e);
-        setLastResponse("네, 거실 조명을 켰습니다."); // Robust fallback
-        setStatus("오프라인 모드 실행");
+        setLastResponse("네, 거실 조명을 켰습니다.");
+        setStatus("데모 모드");
       } finally {
         setIsProcessing(false);
-        setTimeout(() => setStatus("'오케이 구글'이라고 불러보세요."), 4000);
+        setTimeout(() => setStatus("음성 버튼을 눌러 시작하세요"), 4000);
       }
     }, 2000);
   };
 
+  const voiceCommands = [
+    { text: "거실 불 켜줘", icon: "💡" },
+    { text: "오늘 날씨 어때?", icon: "🌤" },
+    { text: "재즈 음악 틀어줘", icon: "🎵" },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto text-center">
-      <div className="mb-12">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">"오케이 구글" 체험</h2>
-        <p className="text-gray-500 text-lg">음성으로 집을 제어하는 마법같은 경험을 확인해보세요.</p>
+      {/* Section Header */}
+      <div className="mb-16">
+        <motion.span
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="inline-block text-xs tracking-[0.3em] uppercase text-gold-400 font-medium mb-4"
+        >
+          Voice Control
+        </motion.span>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-cream-100 mb-6"
+        >
+          "오케이 구글" <span className="italic text-gold-400">체험</span>
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-lg text-charcoal-300 font-light"
+        >
+          음성으로 집을 제어하는 럭셔리한 경험
+        </motion.p>
       </div>
 
-      <div className="relative flex flex-col items-center justify-center h-80 bg-[#0f172a] rounded-[3rem] overflow-hidden shadow-2xl border border-gray-800">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
-        
+      {/* Voice Interface Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.3 }}
+        className="relative flex flex-col items-center justify-center py-20 bg-gradient-to-br from-charcoal-700 to-charcoal-600 rounded-[3rem] overflow-hidden border border-charcoal-500"
+      >
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, #C9A962 1px, transparent 0)`,
+            backgroundSize: '32px 32px'
+          }} />
+        </div>
+
+        {/* Gold accent glow */}
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-64 h-64 bg-gold-400/10 rounded-full blur-3xl" />
+
         {/* Voice Visualizer Waves */}
-        <div className="flex items-end gap-2 mb-10 h-16">
+        <div className="flex items-end gap-3 mb-12 h-16">
           {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
               animate={isListening ? {
-                height: [20, 60, 30, 50, 20],
-                backgroundColor: ['#4285F4', '#EA4335', '#FBBC05', '#34A853', '#4285F4'][i]
-              } : { height: 8, backgroundColor: '#334155' }}
-              transition={{ repeat: Infinity, duration: 0.6, delay: i * 0.1 }}
-              className="w-3 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                height: [16, 48, 24, 40, 16],
+              } : { height: 6 }}
+              transition={{ repeat: Infinity, duration: 0.7, delay: i * 0.08 }}
+              className="w-2 rounded-full"
+              style={{
+                backgroundColor: isListening ? '#C9A962' : '#4A4A4A',
+                boxShadow: isListening ? '0 0 20px rgba(201, 169, 98, 0.4)' : 'none'
+              }}
             />
           ))}
         </div>
 
+        {/* Main Voice Button */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={simulateVoiceControl}
           disabled={isProcessing}
-          className={`relative z-10 w-24 h-24 rounded-full flex items-center justify-center transition-all shadow-2xl
-            ${isListening ? 'bg-white text-blue-600 ring-8 ring-blue-500/20' : 'bg-blue-600 text-white hover:bg-blue-500'}
-          `}
+          className={`relative z-10 w-28 h-28 rounded-full flex items-center justify-center transition-all duration-500 ${
+            isListening
+              ? 'bg-cream-100 text-gold-500 shadow-[0_0_60px_rgba(201,169,98,0.4)]'
+              : 'bg-gradient-to-br from-gold-400 to-gold-500 text-charcoal-700 shadow-luxury-lg hover:shadow-[0_0_40px_rgba(201,169,98,0.3)]'
+          }`}
         >
           {isProcessing ? (
-             <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+             <div className="w-8 h-8 border-3 border-charcoal-300 border-t-charcoal-700 rounded-full animate-spin" />
           ) : (
-            <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
               <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
           )}
         </motion.button>
 
-        <p className="mt-8 text-white font-medium text-lg tracking-wide z-10">{status}</p>
+        {/* Status Text */}
+        <p className="mt-8 text-cream-200 font-light text-lg tracking-wide z-10">{status}</p>
 
+        {/* Response Display */}
         <AnimatePresence>
           {lastResponse && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="mt-6 px-6 py-3 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 z-10 shadow-2xl"
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mt-8 px-8 py-4 bg-cream-100/5 backdrop-blur-xl rounded-2xl border border-gold-400/20 z-10"
             >
-              <p className="text-blue-300 font-medium tracking-tight">" {lastResponse} "</p>
+              <p className="text-gold-300 font-light tracking-wide">" {lastResponse} "</p>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
 
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 opacity-60">
-        <button onClick={simulateVoiceControl} className="p-4 rounded-xl border border-gray-200 text-sm hover:bg-gray-50 transition-colors">"거실 불 켜줘"</button>
-        <button onClick={simulateVoiceControl} className="p-4 rounded-xl border border-gray-200 text-sm hover:bg-gray-50 transition-colors">"오늘 날씨 어때?"</button>
-        <button onClick={simulateVoiceControl} className="p-4 rounded-xl border border-gray-200 text-sm hover:bg-gray-50 transition-colors">"재즈 음악 틀어줘"</button>
-      </div>
+      {/* Quick Command Buttons */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.4 }}
+        className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4"
+      >
+        {voiceCommands.map((cmd, idx) => (
+          <button
+            key={idx}
+            onClick={simulateVoiceControl}
+            className="group p-5 rounded-2xl bg-charcoal-700/50 border border-charcoal-600 hover:border-gold-400/50 hover:bg-charcoal-700 transition-all duration-300"
+          >
+            <span className="block text-2xl mb-2">{cmd.icon}</span>
+            <span className="text-sm text-charcoal-300 group-hover:text-cream-200 transition-colors">"{cmd.text}"</span>
+          </button>
+        ))}
+      </motion.div>
     </div>
   );
 };

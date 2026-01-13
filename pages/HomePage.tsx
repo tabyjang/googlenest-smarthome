@@ -21,17 +21,17 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Interactive Demo Section */}
-      <section id="demo" className="py-32 px-6 bg-gray-50">
+      <section id="demo" className="py-32 px-6 bg-cream-200 noise-overlay">
         <InteractiveDemo />
       </section>
 
       {/* Estimator Section */}
-      <section id="estimator" className="py-32 px-6">
+      <section id="estimator" className="py-32 px-6 bg-cream-100 noise-overlay">
         <Estimator />
       </section>
 
       {/* Voice Experience Section */}
-      <section id="voice" className="py-32 px-6 bg-gray-900 overflow-hidden">
+      <section id="voice" className="py-32 px-6 bg-charcoal-700 overflow-hidden">
         <VoiceExperience />
       </section>
     </>

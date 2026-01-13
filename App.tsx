@@ -9,10 +9,10 @@ const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
 
 // Loading fallback component
 const PageLoader: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  <div className="min-h-screen flex items-center justify-center bg-cream-100">
     <div className="text-center">
-      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-gray-600">로딩 중...</p>
+      <div className="w-12 h-12 border-2 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-charcoal-400 font-light tracking-wide">로딩 중...</p>
     </div>
   </div>
 );
