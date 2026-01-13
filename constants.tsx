@@ -1,4 +1,4 @@
-import { ProductDetail } from './types';
+import { ProductDetail, PlannerProduct, Background } from './types';
 
 export const PRODUCTS: ProductDetail[] = [
   {
@@ -152,3 +152,120 @@ export const ESTIMATOR_PRICING = {
     security: { name: '통합 보안 모니터링', price: 220000 }
   }
 };
+
+// Room Planner Constants
+export const PLANNER_PRODUCTS: PlannerProduct[] = [
+  {
+    id: 'nest-hub-max',
+    name: 'Nest Hub Max',
+    nameKo: '네스트 허브 맥스',
+    image: '/assets/room-planner/products/nest-hub-max.svg',
+    width: 180,
+    height: 130,
+    price: 299000,
+    category: 'display'
+  },
+  {
+    id: 'nest-hub-2nd',
+    name: 'Nest Hub (2nd Gen)',
+    nameKo: '네스트 허브 2세대',
+    image: '/assets/room-planner/products/nest-hub-2nd.svg',
+    width: 150,
+    height: 110,
+    price: 129000,
+    category: 'display'
+  },
+  {
+    id: 'nest-audio',
+    name: 'Nest Audio',
+    nameKo: '네스트 오디오',
+    image: '/assets/room-planner/products/nest-audio.svg',
+    width: 100,
+    height: 150,
+    price: 109000,
+    category: 'audio'
+  },
+  {
+    id: 'nest-mini',
+    name: 'Nest Mini',
+    nameKo: '네스트 미니',
+    image: '/assets/room-planner/products/nest-mini.svg',
+    width: 80,
+    height: 80,
+    price: 59000,
+    category: 'audio'
+  },
+  {
+    id: 'nest-cam',
+    name: 'Nest Cam',
+    nameKo: '네스트 캠',
+    image: '/assets/room-planner/products/nest-cam.svg',
+    width: 80,
+    height: 120,
+    price: 229000,
+    category: 'security'
+  },
+  {
+    id: 'nest-doorbell',
+    name: 'Nest Doorbell',
+    nameKo: '네스트 도어벨',
+    image: '/assets/room-planner/products/nest-doorbell.svg',
+    width: 60,
+    height: 140,
+    price: 249000,
+    category: 'security'
+  },
+  {
+    id: 'nest-thermostat',
+    name: 'Nest Thermostat',
+    nameKo: '네스트 온도조절기',
+    image: '/assets/room-planner/products/nest-thermostat.svg',
+    width: 100,
+    height: 100,
+    price: 179000,
+    category: 'climate'
+  }
+];
+
+export const DEFAULT_BACKGROUNDS: Background[] = [
+  {
+    id: 'living-modern',
+    name: '모던 거실',
+    thumbnail: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=200&h=150&fit=crop',
+    fullImage: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=900&fit=crop'
+  },
+  {
+    id: 'bedroom-cozy',
+    name: '아늑한 침실',
+    thumbnail: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=200&h=150&fit=crop',
+    fullImage: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&h=900&fit=crop'
+  },
+  {
+    id: 'kitchen-bright',
+    name: '밝은 주방',
+    thumbnail: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=150&fit=crop',
+    fullImage: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&h=900&fit=crop'
+  },
+  {
+    id: 'office-minimal',
+    name: '미니멀 홈오피스',
+    thumbnail: 'https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=200&h=150&fit=crop',
+    fullImage: 'https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=1200&h=900&fit=crop'
+  }
+];
+
+export const CANVAS_CONFIG = {
+  width: 800,
+  height: 600,
+  minScale: 0.3,
+  maxScale: 2.0,
+  scaleStep: 0.1
+};
+
+export const PLANNER_CATEGORIES = [
+  { id: 'all', name: '전체' },
+  { id: 'display', name: '디스플레이' },
+  { id: 'audio', name: '오디오' },
+  { id: 'security', name: '보안' },
+  { id: 'climate', name: '온도 제어' }
+];

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Shadow -->
+  <ellipse cx="50" cy="90" rx="40" ry="8" fill="#E8E5E0"/>
+
+  <!-- Outer Ring -->
+  <circle cx="50" cy="50" r="45" fill="#F5F3EF"/>
+
+  <!-- Middle Ring -->
+  <circle cx="50" cy="50" r="40" fill="#2D2D2D"/>
+
+  <!-- Display -->
+  <circle cx="50" cy="50" r="32" fill="#1A1A1A"/>
+
+  <!-- Temperature Display -->
+  <text x="50" y="45" text-anchor="middle" fill="white" font-family="sans-serif" font-size="20" font-weight="bold">22°</text>
+
+  <!-- Mode Text -->
+  <text x="50" y="62" text-anchor="middle" fill="#C9A962" font-family="sans-serif" font-size="8">COOLING</text>
+
+  <!-- Tick Marks -->
+  <line x1="50" y1="20" x2="50" y2="25" stroke="#C9A962" stroke-width="2"/>
+  <line x1="75" y1="50" x2="80" y2="50" stroke="#C9A962" stroke-width="2"/>
+  <line x1="50" y1="75" x2="50" y2="80" stroke="#C9A962" stroke-width="2"/>
+  <line x1="20" y1="50" x2="25" y2="50" stroke="#C9A962" stroke-width="2"/>
+
+  <!-- Arc Indicator -->
+  <path d="M 30 70 A 30 30 0 0 1 70 70" fill="none" stroke="#4285F4" stroke-width="4" stroke-linecap="round"/>
+</svg>

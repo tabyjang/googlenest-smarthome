@@ -52,3 +52,38 @@ export interface EmailResponse {
   message: string;
   id?: string;
 }
+
+// Room Planner Types
+export interface PlannerProduct {
+  id: string;
+  name: string;
+  nameKo: string;
+  image: string;
+  width: number;
+  height: number;
+  price: number;
+  category: 'display' | 'audio' | 'security' | 'climate';
+}
+
+export interface PlacedProduct {
+  instanceId: string;
+  productId: string;
+  x: number;
+  y: number;
+  scale: number;
+  zIndex: number;
+}
+
+export interface Background {
+  id: string;
+  name: string;
+  thumbnail: string;
+  fullImage: string;
+  isCustom?: boolean;
+}
+
+export interface RoomPlannerState {
+  selectedBackground: Background | null;
+  placedProducts: PlacedProduct[];
+  selectedProductInstance: string | null;
+}

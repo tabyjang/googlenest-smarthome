@@ -6,6 +6,7 @@ import Layout from './components/layout/Layout';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage'));
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
+const ExperiencePage = lazy(() => import('./pages/ExperiencePage'));
 
 // Loading fallback component
 const PageLoader: React.FC = () => (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Layout><HomePage /></Layout>} />
         <Route path="/products" element={<Layout><ProductsPage /></Layout>} />
         <Route path="/products/:productId" element={<Layout><ProductDetailPage /></Layout>} />
+        <Route path="/experience" element={<Layout><ExperiencePage /></Layout>} />
       </Routes>
     </Suspense>
   );

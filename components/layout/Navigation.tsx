@@ -17,6 +17,7 @@ const Navigation: React.FC = () => {
   const navItems = [
     { label: '홈', path: '/' },
     { label: '컬렉션', path: '/products' },
+    { label: '체험하기', path: '/experience' },
     { label: '견적 문의', path: '/#estimator' }
   ];
 
