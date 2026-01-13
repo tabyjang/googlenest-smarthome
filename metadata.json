@@ -1,0 +1,7 @@
+{
+  "name": "Google Nest Smart Home Experience",
+  "description": "An immersive 3D-inspired landing page for Google Nest ecosystem featuring interactive floor plans, product showcases, and a Gemini-powered voice simulation.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
