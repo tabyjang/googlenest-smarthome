@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LoadingSpinner from './LoadingSpinner';
 
 const VoiceExperience: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [status, setStatus] = useState<string>("음성 버튼을 눌러 시작하세요");
   const [lastResponse, setLastResponse] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const simulateVoiceControl = async () => {
     if (isProcessing) return;
@@ -13,6 +15,7 @@ const VoiceExperience: React.FC = () => {
     setIsListening(true);
     setStatus("듣고 있습니다...");
     setLastResponse("");
+    setError(null);
 
     setTimeout(async () => {
       setIsListening(false);
@@ -45,12 +48,15 @@ const VoiceExperience: React.FC = () => {
         }
       } catch (e) {
         console.error("AI Error:", e);
-        // Fallback to demo mode if API fails
-        setLastResponse("네, 거실 조명을 켰습니다.");
-        setStatus("데모 모드");
+        setError("음성 인식 서비스에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        setLastResponse("");
+        setStatus("오류 발생");
       } finally {
         setIsProcessing(false);
-        setTimeout(() => setStatus("음성 버튼을 눌러 시작하세요"), 4000);
+        setTimeout(() => {
+          setError(null);
+          setStatus("음성 버튼을 눌러 시작하세요");
+        }, 4000);
       }
     }, 2000);
   };
@@ -168,6 +174,17 @@ const VoiceExperience: React.FC = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Error Message */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl z-10"
+          >
+            <p className="text-red-600 text-sm">{error}</p>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Quick Command Buttons */}
