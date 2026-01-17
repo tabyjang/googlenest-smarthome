@@ -1,0 +1,21 @@
+{
+  "workflow": {
+    "mode": "yolo",
+    "description": "빠른 실행 모드. 대부분의 결정을 자동 승인하고 중요한 체크포인트에서만 멈춤"
+  },
+  "planning": {
+    "depth": "standard",
+    "description": "표준 계획 수준. 너무 상세하지 않으면서도 충분한 가이드 제공"
+  },
+  "gates": {
+    "require_approval_before_phase_execution": false,
+    "require_approval_for_destructive_changes": true,
+    "require_approval_for_new_dependencies": false,
+    "auto_commit_after_phase": true
+  },
+  "project": {
+    "type": "brownfield",
+    "has_codebase_mapping": true,
+    "deployment_platform": "vercel"
+  }
+}
