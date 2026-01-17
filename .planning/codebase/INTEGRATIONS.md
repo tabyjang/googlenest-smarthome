@@ -1,102 +1,86 @@
 # External Integrations
 
-## 1. Google Gemini AI API
+**Analysis Date:** 2026-01-18
 
-### Usage Location
-- `components/VoiceExperience.tsx`
+## APIs & External Services
 
-### Configuration
-```typescript
-const apiKey = process.env.API_KEY; // vite.config.ts에서 주입
-const ai = new GoogleGenAI({ apiKey });
-```
+**AI/ML:**
+- Google Generative AI (Gemini) - AI-powered features
+  - SDK/Client: @google/genai package v1.35.0
+  - Auth: API key in GEMINI_API_KEY env var
+  - Usage: Exposed as `process.env.API_KEY` and `process.env.GEMINI_API_KEY` (`vite.config.ts:14-15`)
 
-### API Call
-```typescript
-const response = await ai.models.generateContent({
-  model: 'gemini-3-flash-preview',
-  contents: "사용자 프롬프트",
-  config: {
-    systemInstruction: "시스템 지시사항"
-  }
-});
-```
+**Email/Communication:**
+- Resend - Email service for quote/contact forms
+  - SDK/Client: resend npm package v6.7.0
+  - Integration point: `api/send-quote.ts`
+  - Auth: Likely requires RESEND_API_KEY (to be confirmed in implementation)
 
-### Environment Variable
-- `.env.local` 파일에 `GEMINI_API_KEY` 설정 필요
-- Vite에서 `process.env.API_KEY`로 주입
+**External APIs:**
+- Not detected - No additional third-party API integrations found
 
-### Error Handling
-- API 실패 시 폴백 응답 제공
-- "오프라인 모드 실행" 상태 표시
+## Data Storage
 
----
+**Databases:**
+- Not detected - Client-side only application, no database connections found
 
-## 2. Spline 3D
+**File Storage:**
+- Browser LocalStorage - Likely used for client-side state persistence
+- html-to-image - Client-side image generation (`html-to-image` package)
 
-### Usage Location
-- `components/Hero.tsx`
+**Caching:**
+- Not detected - No Redis or cache layer
 
-### Integration Method
-```tsx
-<iframe
-  src={SPLINE_URL}
-  frameBorder="0"
-  width="100%"
-  height="100%"
-/>
-```
+## Authentication & Identity
 
-### URL Source
-- `constants.tsx`에 정의
-- `https://my.spline.design/visionosiconsin3d-...`
+**Auth Provider:**
+- Not detected - No authentication system found
+- Application appears to be public-facing without user accounts
 
-### Notes
-- 포인터 이벤트 활성화 (`pointerEvents: 'auto'`)
-- 성능 영향 있음 (무거운 3D 렌더링)
+**OAuth Integrations:**
+- Not detected
 
----
+## Monitoring & Observability
 
-## 3. Image CDNs
+**Error Tracking:**
+- Not detected - No Sentry or error tracking service configured
 
-### Unsplash
-- `SmartZoneControl.tsx`에서 사용
-- 실제 제품 이미지 대체용
-- 쿼리 파라미터: `auto=format&fit=crop&q=80&w=300`
+**Analytics:**
+- Not detected - No analytics integration found
 
-### Picsum (Lorem Picsum)
-- `constants.tsx`에서 사용
-- 제품 플레이스홀더 이미지
-- 시드 기반: `https://picsum.photos/seed/{seed}/400/300`
+**Logs:**
+- Browser console only - No centralized logging
 
----
+## CI/CD & Deployment
 
-## 4. Google Fonts
+**Hosting:**
+- Not specified in codebase
+- Configured for static hosting (Vite build output)
+- Dev server: localhost:3000 (`vite.config.ts:9`)
 
-### Usage Location
-- `index.html`
+**CI Pipeline:**
+- Not detected - No CI/CD configuration files found
 
-### Font
-- Google Sans (wght: 400, 500, 700)
+## Environment Configuration
 
-### Preconnect
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-```
+**Development:**
+- Required env vars: GEMINI_API_KEY
+- Configuration: `.env` files (loaded via Vite)
+- No `.env.example` detected
+
+**Production:**
+- Secrets management: Depends on hosting platform
+- Environment variables injected at build time
+
+## Webhooks & Callbacks
+
+**Incoming:**
+- Not detected
+
+**Outgoing:**
+- Not detected
 
 ---
 
-## 5. TailwindCSS CDN
-
-### Usage Location
-- `index.html`
-
-### Method
-```html
-<script src="https://cdn.tailwindcss.com"></script>
-```
-
-### Notes
-- 프로덕션에서는 빌드 타임 Tailwind 권장
-- CDN은 개발/프로토타입용
+*Integration audit: 2026-01-18*
+*Update when adding/removing external services*

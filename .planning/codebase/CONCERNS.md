@@ -1,81 +1,150 @@
-# Technical Concerns & Debt
+# Codebase Concerns
 
-## High Priority
+**Analysis Date:** 2026-01-18
 
-### 1. TailwindCSS CDN 사용
-- **문제**: 프로덕션에 부적합, 성능 저하
-- **해결**: `tailwindcss` 패키지 설치 및 빌드 파이프라인 통합
-- **영향**: 모든 파일
+## Tech Debt
 
-### 2. 하드코딩된 이미지 URL
-- **문제**: Unsplash/Picsum 의존, 실제 제품 이미지 없음
-- **해결**: 에셋 폴더에 실제 Google Nest 제품 이미지 추가
-- **위치**: `constants.tsx`, `SmartZoneControl.tsx`
+**No automated testing:**
+- Issue: Zero test coverage, no testing framework configured
+- Why: Likely rapid prototyping phase, tests not yet prioritized
+- Impact: Refactoring is risky, bugs may go undetected, confidence in changes is low
+- Fix approach: Add Vitest + Testing Library, start with critical paths (room planner, estimator)
 
-### 3. API Key 노출 위험
-- **문제**: 클라이언트에서 직접 Gemini API 호출
-- **해결**: 백엔드 프록시 또는 서버리스 함수 사용
-- **위치**: `VoiceExperience.tsx`
+**Hard-coded environment variables exposure:**
+- Issue: GEMINI_API_KEY exposed to client-side code via `vite.config.ts:14-15`
+- Why: Quick integration without backend proxy
+- Impact: API key visible in browser, potential security risk and cost exposure
+- Fix approach: Create serverless API route/function to proxy Gemini API calls, keep key server-side only
+
+**No error boundaries:**
+- Issue: No React error boundaries detected in component tree
+- Why: Not implemented yet
+- Impact: Component errors cause full app crash (white screen of death)
+- Fix approach: Add error boundary component wrapping routes in `App.tsx`, catch and display graceful error UI
+
+## Known Bugs
+
+**No specific bugs documented**
+- No TODO/FIXME comments found in codebase
+- No known issues at this time
+- Monitor as project evolves
+
+## Security Considerations
+
+**Client-side API key exposure:**
+- Risk: `GEMINI_API_KEY` defined in browser-accessible code (`vite.config.ts`)
+- Current mitigation: None - key is compiled into JavaScript bundle
+- Recommendations:
+  - Create backend API route (serverless function) to proxy Gemini API
+  - Move API key to server-side environment only
+  - Rate limit API calls to prevent abuse
+
+**No .env.example file:**
+- Risk: Developers may not know required environment variables
+- Current mitigation: None
+- Recommendations:
+  - Create `.env.example` with `GEMINI_API_KEY=your_key_here`
+  - Document required variables in README
+  - Add validation to fail fast if env vars missing
+
+**No authentication system:**
+- Risk: None currently (public-facing app)
+- Current mitigation: Application appears intentionally public
+- Note: If user accounts are added later, implement proper auth (Supabase, Auth0, etc.)
+
+## Performance Bottlenecks
+
+**Large bundle size potential:**
+- Problem: Three.js (0.182.0) is a large dependency (~600KB)
+- Measurement: Not yet measured, but Three.js typically adds significant bundle size
+- Cause: 3D library required for room planner feature
+- Improvement path:
+  - Verify code splitting is working (`vite.config.ts:25-36` configures manual chunks)
+  - Consider dynamic imports for Three.js components
+  - Tree-shake unused Three.js modules
+
+**No lazy loading for components:**
+- Problem: Only pages are lazy-loaded, not feature components
+- Measurement: May impact initial load time
+- Cause: Not yet optimized
+- Improvement path: Lazy load heavy features (room-planner, estimator) on demand
+
+## Fragile Areas
+
+**3D room planner:**
+- Why fragile: Complex drag-and-drop + Three.js scene management
+- Common failures: Performance issues, state synchronization bugs
+- Safe modification: Add tests before changes, isolate Three.js logic from React state
+- Test coverage: None
+
+**No configuration validation:**
+- Why fragile: Missing env vars fail silently or cause runtime errors
+- Common failures: Undefined API keys, broken integrations
+- Safe modification: Add startup validation for required env vars
+- Test coverage: None
+
+## Scaling Limits
+
+**Client-side only:**
+- Current capacity: Limited by browser memory and performance
+- Limit: Complex room plans with many products may cause slowdowns
+- Symptoms at limit: Browser lag, memory issues, crashes
+- Scaling path: Consider server-side scene rendering or optimization of Three.js scene
+
+**No backend database:**
+- Current capacity: No persistent storage beyond localStorage
+- Limit: Cannot save/share room designs across devices or users
+- Symptoms at limit: Users lose work if localStorage is cleared
+- Scaling path: Add backend (Supabase, Firebase) for persistence and sharing
+
+## Dependencies at Risk
+
+**React 19.2.3:**
+- Risk: React 19 is very recent, ecosystem may have compatibility issues
+- Impact: Some libraries may not yet support React 19
+- Migration plan: Monitor for issues, potentially downgrade to React 18 if problems arise
+
+**No dependency version pinning:**
+- Risk: Caret ranges (^) in package.json allow minor/patch updates
+- Impact: Unexpected breaking changes from automatic updates
+- Migration plan: Consider exact versioning for production stability
+
+## Missing Critical Features
+
+**Error tracking and logging:**
+- Problem: No Sentry or error monitoring service
+- Current workaround: Errors only visible in browser console
+- Blocks: Cannot detect production errors, no error analytics
+- Implementation complexity: Low (add Sentry integration)
+
+**Environment configuration documentation:**
+- Problem: No .env.example or setup documentation
+- Current workaround: Developers must guess required variables
+- Blocks: Difficult onboarding for new developers
+- Implementation complexity: Very low (create .env.example file)
+
+**Accessibility (a11y):**
+- Problem: No detected accessibility testing or ARIA attributes
+- Current workaround: None
+- Blocks: May not be accessible to screen reader users
+- Implementation complexity: Medium (audit + fix)
+
+## Test Coverage Gaps
+
+**Entire application:**
+- What's not tested: Everything (no tests exist)
+- Risk: High - any refactoring or change is risky
+- Priority: High
+- Difficulty to test: Medium (need to set up infrastructure)
+
+**Critical paths to test first:**
+1. Room planner drag-and-drop logic (`components/room-planner/`)
+2. Cost estimator calculations (`components/estimator/`)
+3. API integrations (`api/send-quote.ts`)
+4. Routing and page navigation (`App.tsx`)
+5. 3D scene rendering (Three.js components)
 
 ---
 
-## Medium Priority
-
-### 4. 테스트 없음
-- **문제**: 단위/통합 테스트 미작성
-- **해결**: Vitest + Testing Library 도입
-- **영향**: 모든 컴포넌트
-
-### 5. 반응형 디자인 불완전
-- **문제**: 모바일 최적화 부족 (특히 SmartZoneControl)
-- **해결**: 모바일 전용 레이아웃 추가
-- **위치**: `SmartZoneControl.tsx`
-
-### 6. 접근성(A11y) 미흡
-- **문제**: aria-label 없음, 키보드 네비게이션 미지원
-- **해결**: ARIA 속성 추가, 포커스 관리
-- **영향**: 모든 인터랙티브 컴포넌트
-
-### 7. Spline iframe 성능
-- **문제**: 무거운 3D 렌더링, 모바일에서 느림
-- **해결**: 모바일에서 정적 이미지 폴백, 지연 로딩
-- **위치**: `Hero.tsx`
-
----
-
-## Low Priority
-
-### 8. AnimatePresence 재정의
-- **문제**: `ProductShowcase.tsx`에서 불필요하게 재정의
-  ```tsx
-  const AnimatePresence = motion.AnimatePresence; // 잘못됨
-  ```
-- **해결**: framer-motion에서 직접 import
-- **위치**: `ProductShowcase.tsx:82`
-
-### 9. 하드코딩된 가격
-- **문제**: 견적 가격이 코드에 하드코딩
-- **해결**: 설정 파일 또는 CMS 연동
-- **위치**: `Estimator.tsx`
-
-### 10. 구글 제품 이름 상표권
-- **문제**: "Google Nest" 브랜드 사용
-- **해결**: 데모/학습용 명시 또는 이름 변경
-- **영향**: 전체 UI 텍스트
-
----
-
-## Code Smells
-
-### 11. 큰 컴포넌트 파일
-- `SmartZoneControl.tsx` (214줄) - 분리 고려
-- 3D 뷰, 상세 패널, 토글 버튼을 서브컴포넌트로
-
-### 12. 반복 패턴
-- Navigation/Hero에서 유사한 스크롤 기반 스타일 로직
-- 커스텀 훅으로 추출 가능
-
-### 13. 매직 넘버
-- `scrollY > 50` (Navigation)
-- `0.2` (Hero 스크롤 진행률)
-- 상수로 추출 권장
+*Concerns audit: 2026-01-18*
+*Update as issues are fixed or new ones discovered*

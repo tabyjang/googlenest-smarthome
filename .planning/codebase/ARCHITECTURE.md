@@ -1,54 +1,129 @@
 # Architecture
 
-## Overview
-싱글 페이지 마케팅/랜딩 페이지 구조. 스크롤 기반 섹션 네비게이션.
+**Analysis Date:** 2026-01-18
 
-## Application Flow
+## Pattern Overview
 
-```
-index.html
-    └── index.tsx (React 진입점)
-        └── App.tsx (메인 라우터/레이아웃)
-            ├── Navigation (고정 헤더)
-            ├── Hero (전체 화면 섹션)
-            ├── ProductShowcase (제품 그리드)
-            ├── SmartZoneControl (인터랙티브 플로어플랜)
-            ├── Estimator (견적 계산기)
-            ├── VoiceExperience (AI 음성 체험)
-            └── Footer
-```
+**Overall:** Client-Side React SPA (Single Page Application) with 3D Visualization
 
-## Component Architecture
+**Key Characteristics:**
+- Component-based React architecture
+- Client-side routing with React Router
+- 3D room planner using Three.js
+- Code-split pages for performance
+- No server-side rendering
 
-### Container Components
-- **App.tsx** - 전역 스크롤 상태 관리, 섹션 레이아웃
+## Layers
 
-### Presentational Components
-- **Hero** - 3D 배경 + 텍스트 오버레이, 스크롤 기반 시차 효과
-- **Navigation** - 스크롤 위치 기반 스타일 변경
-- **ProductShowcase** - 제품 카드 그리드, 호버 인터랙션
-- **SmartZoneControl** - 3D 아이소메트릭 뷰, 구역 선택 상태 관리
-- **Estimator** - 폼 상태 관리, 가격 계산 로직
-- **VoiceExperience** - AI API 호출, 로딩/에러 상태 처리
+**Presentation Layer:**
+- Purpose: UI components and page layouts
+- Contains: React components (`.tsx` files)
+- Location: `components/`, `pages/`
+- Depends on: No backend layer (client-side only)
+- Used by: React Router routes in `App.tsx`
 
-## State Management
-- **React useState** - 로컬 컴포넌트 상태
-- **Props Drilling** - 스크롤 위치 (App → Navigation, Hero)
-- 전역 상태 관리 라이브러리 없음
+**Component Categories:**
+- Layout components: `components/layout/` (Navigation, Footer, Layout wrapper)
+- Feature components: `components/room-planner/`, `components/estimator/`, `components/demo/`
+- Product components: `components/products/` (ProductCard, ProductGrid)
+- 3D components: `components/three/` (Three.js/R3F components)
+
+**API/Service Layer:**
+- Purpose: External service integrations
+- Location: `api/` directory
+- Contains: API client functions
+- Example: `api/send-quote.ts` for email service
+
+**Routing Layer:**
+- Purpose: Client-side navigation
+- Location: `App.tsx`
+- Pattern: Lazy-loaded routes for code splitting
+- Routes: /, /products, /products/:productId, /experience
 
 ## Data Flow
-```
-사용자 인터랙션
-    ↓
-컴포넌트 로컬 State 업데이트
-    ↓
-(VoiceExperience만) Google Gemini API 호출
-    ↓
-UI 렌더링
-```
 
-## Patterns Used
-- **Functional Components** - 모든 컴포넌트
-- **Custom Hooks** 없음 (useScroll은 framer-motion 제공)
-- **Prop Types via TypeScript** - 인터페이스 정의
-- **CDN Import Maps** - 외부 라이브러리 로딩
+**Page Navigation:**
+
+1. User clicks link or navigates to URL
+2. React Router matches route in `App.tsx`
+3. Lazy load page component (HomePage, ProductsPage, etc.)
+4. Page renders within `<Layout>` wrapper
+5. Components fetch data or interact with services as needed
+
+**3D Room Planner Flow:**
+
+1. User interacts with room planner (`components/room-planner/RoomPlanner.tsx`)
+2. Drag products from ProductDock to PlannerCanvas
+3. Three.js renders 3D scene via React Three Fiber
+4. DraggableProduct components handle user interactions
+5. State managed locally (no backend persistence)
+
+**State Management:**
+- React local state (useState, useContext likely)
+- No global state management library detected (Redux, Zustand, etc.)
+
+## Key Abstractions
+
+**Page Components:**
+- Purpose: Top-level route components
+- Location: `pages/` directory
+- Pattern: Lazy-loaded via React.lazy()
+- Examples: HomePage, ProductsPage, ProductDetailPage, ExperiencePage
+
+**Layout Pattern:**
+- Purpose: Consistent page structure
+- Location: `components/layout/Layout.tsx`
+- Pattern: Wrapper component with Navigation and Footer
+- Usage: Wraps all page routes in `App.tsx`
+
+**Feature Modules:**
+- Purpose: Self-contained feature implementations
+- Examples:
+  - room-planner: 3D room visualization and product placement
+  - estimator: Cost/quote estimation
+  - demo: Interactive product demonstrations
+- Pattern: Directory-based organization with index.ts exports
+
+## Entry Points
+
+**Application Entry:**
+- Location: `index.tsx` (implied, standard Vite/React pattern)
+- Triggers: Browser loads application
+- Responsibilities: Render React app, initialize routing
+
+**Main App Component:**
+- Location: `App.tsx`
+- Triggers: Loaded by index.tsx
+- Responsibilities: Route configuration, lazy loading, Suspense boundary
+
+**Public Assets:**
+- Location: `public/` directory
+- Contains: Static assets, likely including product images
+- Accessed: Direct URL paths in production
+
+## Error Handling
+
+**Strategy:** React error boundaries (implied), Suspense for lazy loading
+
+**Patterns:**
+- Suspense with PageLoader fallback for route transitions (`App.tsx:12-18`)
+- Loading states shown during code splitting
+
+## Cross-Cutting Concerns
+
+**Loading States:**
+- PageLoader component with spinner animation
+- Used in Suspense fallback
+
+**Routing:**
+- Client-side routing via React Router DOM
+- Lazy loading for performance optimization
+
+**3D Rendering:**
+- Three.js integration via React Three Fiber
+- Isolated in room-planner and three component directories
+
+---
+
+*Architecture analysis: 2026-01-18*
+*Update when major patterns change*

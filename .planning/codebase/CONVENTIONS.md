@@ -1,69 +1,141 @@
 # Coding Conventions
 
-## File Naming
-- **컴포넌트**: PascalCase (`ProductShowcase.tsx`)
-- **타입 파일**: lowercase (`types.ts`)
-- **설정 파일**: lowercase with dots (`vite.config.ts`)
+**Analysis Date:** 2026-01-18
 
-## Component Structure
-```tsx
-import React from 'react';
-import { motion } from 'framer-motion';
-// 외부 라이브러리 먼저, 내부 모듈 나중
+## Naming Patterns
 
-interface ComponentProps {
-  // Props 인터페이스
-}
+**Files:**
+- PascalCase.tsx for React components (App.tsx, HomePage.tsx, ProductCard.tsx)
+- kebab-case.ts for utilities and API files (send-quote.ts)
+- lowercase.json for config files (package.json, tsconfig.json)
 
-const Component: React.FC<ComponentProps> = ({ prop }) => {
-  // State hooks
-  const [state, setState] = useState();
+**Functions:**
+- camelCase for all functions
+- PascalCase for React components (React.FC pattern)
+- Descriptive names (e.g., InteractiveDemo, EstimatorForm)
 
-  // Effects
-  useEffect(() => {}, []);
+**Variables:**
+- camelCase for variables
+- Likely UPPER_SNAKE_CASE for constants (in `constants.tsx`)
+- No underscore prefix detected
 
-  // Handlers
-  const handleEvent = () => {};
+**Types:**
+- PascalCase for interfaces and types
+- No I prefix (modern TypeScript convention)
+- Type definitions in `types.ts`
 
+## Code Style
+
+**Formatting:**
+- 2-space indentation (based on `tsconfig.json` and common React practice)
+- Single quotes likely (standard Vite/React default)
+- Semicolons likely required (TypeScript convention)
+- No explicit Prettier config detected
+
+**Linting:**
+- No ESLint config detected
+- TypeScript strict mode not explicitly enabled in `tsconfig.json`
+- `skipLibCheck: true` for faster builds
+
+## Import Organization
+
+**Order:**
+1. React imports first
+2. Third-party packages (react-router-dom, etc.)
+3. Local components
+4. Observed in `App.tsx:1-3`
+
+**Grouping:**
+- React imports at top
+- Blank lines between import groups (example: `App.tsx`)
+
+**Path Aliases:**
+- `@/*` maps to project root (`tsconfig.json:22-24`, `vite.config.ts:18-20`)
+- Usage: `@/components/*`, `@/pages/*`, etc.
+
+## Component Patterns
+
+**React Components:**
+- React.FC type annotation (e.g., `const App: React.FC = () => {...}`)
+- Functional components only (no class components detected)
+- Lazy loading for pages: `lazy(() => import('./pages/HomePage'))`
+
+**Component Structure:**
+```typescript
+const ComponentName: React.FC = () => {
+  // State and hooks
+  // Handler functions
   // Render
-  return (...);
+  return (
+    <div>...</div>
+  );
 };
 
-export default Component;
+export default ComponentName;
 ```
 
-## TypeScript
-- `React.FC<Props>` 타입 사용
-- 인터페이스는 `interface` 키워드 사용 (type alias 대신)
-- 타입은 `types.ts`에 중앙화
+**Loading States:**
+- Custom loading components (PageLoader in `App.tsx:12-19`)
+- Suspense boundaries for lazy loading
+- Visual feedback with spinners and messages
 
-## Styling (TailwindCSS)
-- 인라인 className 사용
-- 조건부 클래스: 템플릿 리터럴 + 삼항 연산자
-  ```tsx
-  className={`base-class ${condition ? 'active' : 'inactive'}`}
-  ```
-- 긴 클래스는 줄바꿈 없이 한 줄에 작성
+## TypeScript Usage
 
-## Animation (Framer Motion)
-- `motion.div` 직접 사용
-- `initial`, `animate`, `exit` 패턴
-- `whileHover`, `whileTap` 인터랙션
-- `AnimatePresence`로 exit 애니메이션 처리
+**Configuration:**
+- Target: ES2022
+- Module: ESNext with bundler resolution
+- JSX: react-jsx (new JSX transform)
+- Experimental decorators enabled
+- Allow importing TS extensions (noEmit mode)
 
-## State Management
-- `useState` 훅 사용
-- 복잡한 상태는 객체로 관리 (Estimator의 options)
-- Props drilling 허용 (전역 상태 관리 없음)
+**Type Safety:**
+- TypeScript across all source files
+- Shared types in `types.ts`
+- Type definitions for third-party libraries (@types/node, @types/three)
+
+## File Organization
+
+**Component Files:**
+- One component per file
+- Export default for component
+- Named exports for utilities if needed
+
+**Feature Directories:**
+- Related components grouped in subdirectories
+- Example: `components/room-planner/` contains all room planner components
+- Optional `index.ts` for barrel exports
+
+**Lazy Loading:**
+- Pages lazy loaded for code splitting
+- Pattern: `const Page = lazy(() => import('./pages/Page'));`
 
 ## Comments
-- 한국어 주석 사용 (주요 섹션 설명)
-- JSX 내 주석: `{/* 섹션 설명 */}`
 
-## Import Aliases
-- `@/*` → 프로젝트 루트 (tsconfig.json, vite.config.ts)
+**When to Comment:**
+- Inline comments for complex logic (observed in `vite.config.ts:26-35`)
+- Section headers for clarity (// React core, // Three.js ecosystem)
 
-## 한/영 혼용
-- UI 텍스트: 한국어
-- 코드/변수명: 영어
-- 주석: 한국어
+**JSDoc/TSDoc:**
+- Not consistently used (lightweight approach)
+- Type annotations in TypeScript serve as documentation
+
+**Comment Style:**
+- Inline comments with //
+- Descriptive comments for configuration (build chunks, etc.)
+
+## Module Design
+
+**Exports:**
+- Default exports for React components
+- Named exports for utilities
+- Barrel files (index.ts) in feature directories for clean imports
+
+**Import Patterns:**
+- Absolute imports using @ alias preferred
+- Relative imports for sibling files
+- Lazy imports for routes
+
+---
+
+*Convention analysis: 2026-01-18*
+*Update when patterns change*

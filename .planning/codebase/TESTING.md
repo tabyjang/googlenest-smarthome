@@ -1,65 +1,101 @@
-# Testing
+# Testing Patterns
 
-## Current Status
-**테스트 설정 없음** - 테스트 프레임워크 미설치
+**Analysis Date:** 2026-01-18
 
-## Recommended Setup (향후)
+## Test Framework
 
-### Unit Testing
+**Runner:**
+- Not detected - No test framework configured
+
+**Assertion Library:**
+- Not detected
+
+**Run Commands:**
 ```bash
-npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
+# No test scripts found in package.json
 ```
 
-### Test Configuration
-```typescript
-// vitest.config.ts
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
+## Test File Organization
 
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: './src/test/setup.ts',
-  },
-});
-```
+**Location:**
+- No test files detected in codebase
 
-### Testing Priorities
-1. **Estimator** - 가격 계산 로직 (순수 함수화 필요)
-2. **VoiceExperience** - API 모킹, 상태 전이
-3. **SmartZoneControl** - 구역 선택 상태
+**Naming:**
+- Not applicable - No testing infrastructure
 
-### E2E Testing (선택)
-```bash
-npm install -D playwright
-```
+**Structure:**
+- No test directory structure
 
-## Manual Testing Checklist
+## Test Structure
 
-### Hero
-- [ ] Spline 3D 모델 로드 확인
-- [ ] 스크롤 시 텍스트 페이드아웃
+**Suite Organization:**
+- Not applicable
 
-### Navigation
-- [ ] 스크롤 시 배경색 변경
-- [ ] 앵커 링크 동작
+**Patterns:**
+- No testing patterns established
 
-### ProductShowcase
-- [ ] 호버 시 오버레이 표시
-- [ ] 이미지 로드 확인
+## Mocking
 
-### SmartZoneControl
-- [ ] 구역 클릭 시 상세 패널 변경
-- [ ] Day/Night 모드 토글
+**Framework:**
+- Not detected
 
-### Estimator
-- [ ] 방 개수 증감
-- [ ] 옵션 체크박스 토글
-- [ ] 총 가격 계산 정확성
+**Patterns:**
+- Not applicable
 
-### VoiceExperience
-- [ ] 마이크 버튼 클릭 시 애니메이션
-- [ ] API 호출 성공/실패 처리
-- [ ] 빠른 예시 버튼 동작
+**What to Mock:**
+- Not applicable
+
+**What NOT to Mock:**
+- Not applicable
+
+## Fixtures and Factories
+
+**Test Data:**
+- Not applicable
+
+**Location:**
+- Not detected
+
+## Coverage
+
+**Requirements:**
+- No coverage requirements
+
+**Configuration:**
+- No coverage tooling configured
+
+**View Coverage:**
+- Not applicable
+
+## Test Types
+
+**Unit Tests:**
+- Not present
+
+**Integration Tests:**
+- Not present
+
+**E2E Tests:**
+- Not present
+
+## Common Patterns
+
+**Note:** This project currently has no testing infrastructure.
+
+**Recommendations for future testing:**
+- Consider adding Vitest (fast, Vite-native test runner)
+- Testing Library for React component testing
+- MSW (Mock Service Worker) for API mocking
+- Playwright or Cypress for E2E testing of 3D interactions
+
+**Critical areas that would benefit from tests:**
+- Room planner drag-and-drop interactions
+- Product estimation calculations
+- API integrations (email sending, AI responses)
+- 3D scene rendering and interactions
+- Routing and page navigation
+
+---
+
+*Testing analysis: 2026-01-18*
+*Update when test patterns are established*
