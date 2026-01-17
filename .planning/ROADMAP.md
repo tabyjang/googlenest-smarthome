@@ -58,10 +58,12 @@ Plans:
 - 인스턴싱 및 지오메트리 재사용
 - Vite 번들 최적화 및 코드 스플리팅 전략
 - WebP 이미지 변환 및 lazy loading
-**Plans**: TBD
+**Plans**: 3개 계획 완료
 
 Plans:
-- [ ] TBD (planning 단계에서 정의)
+- [ ] 03-01: 히어로 섹션 3D 경량화 (Three.js 제거, CSS 대안)
+- [ ] 03-02: 번들 최적화 및 코드 스플리팅
+- [ ] 03-03: 이미지 최적화 및 Lighthouse 검증
 
 ### Phase 4: Accessibility
 **Goal**: WCAG 2.1 AA 준수, 키보드 네비게이션 100%, 스크린 리더 호환성
@@ -109,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Testing Infrastructure | 2/2 | ✅ Complete | 2026-01-18 |
 | 2. Error Handling | 2/2 | ✅ Complete | 2026-01-18 |
-| 3. Performance Optimization | 0/? | Not started | - |
+| 3. Performance Optimization | 0/3 | Planning complete | - |
 | 4. Accessibility | 0/? | Not started | - |
 | 5. Production Readiness | 0/? | Not started | - |
 | 6. Polish & Documentation | 0/? | Not started | - |
