@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI } from "@google/genai";
 
 const VoiceExperience: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
@@ -21,24 +20,32 @@ const VoiceExperience: React.FC = () => {
       setStatus("응답 생성 중...");
 
       try {
-        const apiKey = process.env.API_KEY;
-        if (!apiKey) {
-          throw new Error("API Key not found");
-        }
-
-        const ai = new GoogleGenAI({ apiKey });
-        const response = await ai.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: "사용자가 '거실 불 켜줘'라고 말했습니다. 구글 어시스턴트답게 친절하고 아주 짧게 확인 답변을 한국어로 작성해주세요. (예: 네, 거실 조명을 켰습니다.) 딱 한 문장으로 대답하세요.",
-          config: {
-             systemInstruction: "You are a helpful, concise Google Nest smart home assistant. Respond only in Korean."
-          }
+        // Call our secure API endpoint instead of directly using Gemini API
+        const response = await fetch('/api/gemini', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: "사용자가 '거실 불 켜줘'라고 말했습니다. 구글 어시스턴트답게 친절하고 아주 짧게 확인 답변을 한국어로 작성해주세요. (예: 네, 거실 조명을 켰습니다.) 딱 한 문장으로 대답하세요."
+          })
         });
 
-        setLastResponse(response.text || "네, 거실 조명을 켰습니다.");
-        setStatus("완료");
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.text) {
+          setLastResponse(data.text);
+          setStatus("완료");
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
       } catch (e) {
         console.error("AI Error:", e);
+        // Fallback to demo mode if API fails
         setLastResponse("네, 거실 조명을 켰습니다.");
         setStatus("데모 모드");
       } finally {

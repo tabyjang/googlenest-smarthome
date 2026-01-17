@@ -1,18 +1,20 @@
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
+export default defineConfig(() => {
+    // Note: Environment variables are now only used server-side in API routes
+    // Client-side code should call /api/gemini instead of using the API key directly
     return {
       server: {
         port: 3000,
         host: '0.0.0.0',
       },
       plugins: [react()],
+      // Removed: API key exposure via define (security fix)
+      // Old code exposed GEMINI_API_KEY to client bundle
       define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+        // Add any other safe client-side env vars here if needed
       },
       resolve: {
         alias: {
