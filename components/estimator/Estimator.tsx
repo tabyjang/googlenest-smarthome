@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import EstimatorForm from './EstimatorForm';
 import { QuoteFormData, QuoteOptions } from '../../types';
 import { ESTIMATOR_PRICING } from '../../constants';
+import LoadingSpinner from '../LoadingSpinner';
 
 const Estimator: React.FC = () => {
   const [rooms, setRooms] = useState(2);
@@ -15,6 +16,7 @@ const Estimator: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { basePrice, roomMultiplier, options: optionPrices } = ESTIMATOR_PRICING;
 
@@ -34,6 +36,7 @@ const Estimator: React.FC = () => {
   ];
 
   const handleSubmit = async (formData: QuoteFormData) => {
+    setError(null);
     setIsSubmitting(true);
 
     try {
@@ -49,15 +52,21 @@ const Estimator: React.FC = () => {
         })
       });
 
-      if (response.ok) {
-        setSubmitSuccess(true);
-        setShowForm(false);
-      } else {
-        throw new Error('Failed to send quote');
+      if (!response.ok) {
+        throw new Error(`서버 오류: ${response.status}`);
       }
-    } catch (error) {
-      console.error('Error sending quote:', error);
-      alert('견적서 발송에 실패했습니다. 다시 시도해주세요.');
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || '견적 전송에 실패했습니다');
+      }
+
+      setSubmitSuccess(true);
+      setShowForm(false);
+    } catch (e) {
+      console.error('Quote submission error:', e);
+      setError('견적 요청 전송 중 오류가 발생했습니다. 네트워크 연결을 확인하고 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);
     }
@@ -151,6 +160,25 @@ const Estimator: React.FC = () => {
             className="bg-white rounded-[2.5rem] shadow-soft-lg overflow-hidden border border-cream-300"
           >
             <div className="p-8 md:p-12">
+              {/* Error Message */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl"
+                >
+                  <div className="flex items-start justify-between">
+                    <p className="text-red-600 text-sm flex-1">{error}</p>
+                    <button
+                      onClick={() => setError(null)}
+                      className="ml-4 px-4 py-2 text-sm text-red-600 hover:text-red-700 font-medium border border-red-300 rounded-lg hover:bg-red-100 transition-colors"
+                    >
+                      다시 시도
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {/* Left: Options */}
                 <div className="space-y-10">
