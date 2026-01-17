@@ -1,6 +1,8 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import ErrorBoundary from './components/ErrorBoundary';
+import ErrorFallback from './components/ErrorFallback';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -20,14 +22,16 @@ const PageLoader: React.FC = () => (
 
 const App: React.FC = () => {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route path="/" element={<Layout><HomePage /></Layout>} />
-        <Route path="/products" element={<Layout><ProductsPage /></Layout>} />
-        <Route path="/products/:productId" element={<Layout><ProductDetailPage /></Layout>} />
-        <Route path="/experience" element={<Layout><ExperiencePage /></Layout>} />
-      </Routes>
-    </Suspense>
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Layout><HomePage /></Layout>} />
+          <Route path="/products" element={<Layout><ProductsPage /></Layout>} />
+          <Route path="/products/:productId" element={<Layout><ProductDetailPage /></Layout>} />
+          <Route path="/experience" element={<Layout><ExperiencePage /></Layout>} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 
